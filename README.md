@@ -1,1 +1,1 @@
-# walmart-Recruiting-store-sales-forecasting
+# walmart-recruiting-store-sales-forecasting
