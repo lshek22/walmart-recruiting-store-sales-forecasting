@@ -390,7 +390,7 @@ Patch Time Series Transformer (NeuralForecast), როგორც **უნი�
 5. სადაც არის, გამოიყენეთ `FAST_RUN` სმოუკ-ტესტისთვის სრული Optuna / სვიპის გაშვებამდე.
 6. ატვირთეთ მიღებული `submission_*.csv` Kaggle-ზე.
 
-**Model Inference**
+## Model Inference
 mlflow-დან იწერს submission.csv ფაილს და ინახავას kaggle/working/ouput დირექტორიაში
 
 ---
