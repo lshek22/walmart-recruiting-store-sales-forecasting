@@ -151,7 +151,7 @@ walmart-recruiting-store-sales-forecasting/
 ვალიდაცია ოჯახების მიხედვით განსხვავდება:
 
 ### A. დღესასწაულზე ორიენტირებული 3-ფოლდიანი rolling origin
-იყენებენ **DLinear, N-BEATS, Prophet, SARIMA, NeuralProphet**.
+იყენებენ **DLinear, N-BEATS, Prophet, SARIMA, NeuralProphet, XGBoost**.
 
 | ფოლდი | ვალიდაციის ფანჯარა |
 |---|---|
