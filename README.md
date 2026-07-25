@@ -364,18 +364,18 @@ Patch Time Series Transformer (NeuralForecast), როგორც **უნი�
 
 ## მეტრიკების შეჯამება
 
-| მოდელი | ტიპური შერჩევის მეტრიკა | შენიშვნა |
-|---|---|---|
-| XGBoost v4 | Val WMAE ≈ 1688 (blended) | ყველაზე ძლიერი ცხრილური ბეიზლაინი ნოუთბუქში |
-| LightGBM v4 | Val WMAE ≈ 2387 (blended) | იგივე რეცეპტი, განსხვავებული val ფანჯარა |
-| PatchTST | Val WMAE ≈ 2234 | უნივარიატული ტრანსფორმერი |
-| SARIMA | ფოლდების საშუალო WMAE ≈ 2129 | სეზონური ლოკალური მოდელები |
-| N-BEATS | Kaggle public ≈ 2779 | გაზიარებული 3-ფოლდიანი რეცეპტი |
-| Prophet | Kaggle public ≈ 2734 | დღესასწაულების ცხრილი + Optuna |
-| DLinear | Kaggle public ≈ 2977 | გაზიარებული 3-ფოლდიანი რეცეპტი |
-| TFT | Val სვიპები ~3140–4500 | მგრძნობიარეა კოვარიატების კონფიგის მიმართ |
-| ARIMA | ქვესიმრავლის WMAE ≈ 2408 | არასეზონური ლოკალური ბეიზლაინი |
-| Random Forest / NeuralProphet | Runtime CV | იხილეთ DagsHub გაშვებები |
+| მოდელი | ტიპური შერჩევის მეტრიკა |
+|---|---|
+| XGBoost v4 | Val WMAE ≈ 1688 (blended) |
+| LightGBM v4 | Val WMAE ≈ 2387 (blended) |
+| PatchTST | Val WMAE ≈ 2234 |
+| SARIMA | ფოლდების საშუალო WMAE ≈ 2129 |
+| N-BEATS | Kaggle public ≈ 2779 |
+| Prophet | Kaggle public ≈ 2734 |
+| DLinear | Kaggle public ≈ 2977 | 
+| TFT | Val სვიპები ~3140–4500 |
+| ARIMA | ქვესიმრავლის WMAE ≈ 2408 | 
+| Random Forest / NeuralProphet | Runtime CV | 
 
 ზუსტი ლიდერბორდის რიცხვები საბმიშენის ვერსიაზეა დამოკიდებული; ყოველთვის უპირატესობა მიეცით DagsHub / Kaggle-ის უახლეს ჩანაწერს მოცემული ნოუთბუქისთვის.
 
