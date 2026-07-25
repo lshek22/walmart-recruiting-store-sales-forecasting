@@ -1,45 +1,45 @@
 # Walmart Recruiting — Store Sales Forecasting
 
-University ML final project based on the
+უნივერსიტეტის ML საბოლოო პროექტი, დაფუძნებული
 [Walmart Recruiting - Store Sales Forecasting](https://www.kaggle.com/competitions/walmart-recruiting-store-sales-forecasting)
-Kaggle competition.
+Kaggle კონკურსზე.
 
-## Problem description
+## პრობლემის აღწერა
 
-The goal is to forecast **weekly sales** for every **department in each of Walmart’s 45 stores**, using historical sales and store/feature data.
+ამ პროექტში ჩვენი მიზანია **ვოლმარტის 45 მაღაზიაში** თითოეული **განყოფილების (დეპარტამენტის) კვირის გაყიდვების** პროგნოზირება ისტორიული გაყიდვებისა და მაღაზია/ფიჩერების მონაცემების საფუძველზე.
 
-There are thousands of independent `(Store, Dept)` series. Predictions are scored with **Weighted Mean Absolute Error (WMAE)**:
+გვაქვს ათასობით დამოუკიდებელი `(Store, Dept)` მწკრივი. პროგნოზები ფასდება **Weighted Mean Absolute Error (WMAE)**-ით:
 
 ```
 WMAE = Σ(w_i · |y_i − ŷ_i|) / Σ(w_i)
-w_i = 5 if the week is a holiday week, else 1
+w_i = 5 თუ კვირა დღესასწაულურია, სხვა შემთხვევაში 1
 ```
 
-Holiday weeks (Super Bowl, Labor Day, Thanksgiving, Christmas) therefore dominate the leaderboard metric.
+დღესასწაულური კვირები (Super Bowl, Labor Day, Thanksgiving, Christmas) ამიტომ დომინირებენ ლიდერბორდის მეტრიკაში.
 
-### Challenges
+### გამოწვევები
 
-- **Seasonal swings.** Sales move strongly with the retail calendar — especially Thanksgiving, Christmas, and the weeks around them.
-- **Promotions / MarkDowns.** Temporary discounts affect departments unevenly; which series respond, and by how much, is hard to know a priori.
-- **Holiday-weighted evaluation.** Mistakes on the four major holiday weeks cost **5×** as much as mistakes on ordinary weeks.
-- **Limited holiday history.** Each holiday appears only once per year, so seasonal patterns have few positive examples.
-- **Heterogeneous series.** Some Store×Dept pairs are long and smooth; others are short, sparse, or nearly constant.
+- **სეზონური რყევები.** გაყიდვები მნიშვნელოვნად იცვლება საცალო კალენდართან ერთად — განსაკუთრებით Thanksgiving, Christmas და მათ გარშემო კვირებში.
+- **აქციების / MarkDown-ების გავლენა.** დროებითი ფასდაკლებები დეპარტამენტებზე არათანაბრად მოქმედებს; რომელი მწკრივები რეაგირებენ და რამდენად — წინასწარ რთული დასადგენია.
+- **დღესასწაულების წონითი სიმძიმე.** ოთხ ძირითად დღესასწაულურ კვირაში შეცდომა **5-ჯერ** უფრო ძვირია, ვიდრე ჩვეულებრივ კვირაში.
+- **შეზღუდული დღესასწაულური ისტორია.** თითოეული დღესასწაული წელიწადში მხოლოდ ერთხელ მოდის, ამიტომ სეზონური შაბლონებისთვის დადებითი მაგალითები ცოტაა.
+- **ჰეტეროგენული მწკრივები.** ზოგი Store×Dept წყვილი გრძელი და გლუვია; სხვები მოკლე, იშვიათი ან თითქმის მუდმივია.
 
-### Goal
+### მიზანი
 
-Train forecasting models that minimize WMAE on weekly sales, with validation schemes that stress holiday and seasonal regimes — not only the last few quiet weeks of the training window.
+მოდელების დატრენინგება, რომლებიც მინიმალურ WMAE-ს აღწევენ კვირის გაყიდვებზე, ისეთი ვალიდაციით, რომელიც ამოწმებს დღესასწაულურ და სეზონურ რეჟიმებს — და არა მხოლოდ ტრენინგის ბოლო რამდენიმე მშვიდ კვირას.
 
 ---
 
-## Repository structure
+## რეპოზიტორის სტრუქტურა
 
 ```
 walmart-recruiting-store-sales-forecasting/
 ├── README.md
-├── preprocessing.ipynb          # shared EDA / cleaning exploration
-├── features.ipynb               # shared feature exploration
+├── preprocessing.ipynb          # საერთო EDA / გაწმენდის ექსპლორაცია
+├── features.ipynb               # საერთო ფიჩერების ექსპლორაცია
 │
-├── # Tree / classical models
+├── # ხის / კლასიკური მოდელები
 ├── experiment-xgboost-v4.ipynb
 ├── experiment_light_v4.ipynb
 ├── experiment-RandomForest.ipynb
@@ -48,33 +48,33 @@ walmart-recruiting-store-sales-forecasting/
 ├── experiment-Prophet.ipynb
 ├── experiment-NeuralProphet.ipynb
 │
-├── # Neural forecasting models
+├── # ნეირონული პროგნოზირების მოდელები
 ├── experiment-DLinear.ipynb
 ├── experiment-NBEATS.ipynb
 ├── experiment_tft_v3.ipynb
 └── experiment_patchtst_v1.ipynb
 ```
 
-Older notebook revisions (`experiment-xgboost.ipynb`, `experiment-lightgbm-v2/v3`, `experiment-arima.ipynb`, `experiment-tft.ipynb`, …) are kept for history; the sections below describe the **current model versions**.
+ძველი ნოუთბუქების რევიზიები (`experiment-xgboost.ipynb`, `experiment-lightgbm-v2/v3`, `experiment-arima.ipynb`, `experiment-tft.ipynb`, …) შენახულია ისტორიისთვის; ქვემოთ აღწერილია **მიმდინარე ვერსიები**.
 
-Competition data (`train.csv`, `test.csv`, `features.csv`, `stores.csv`, `sampleSubmission.csv`) is loaded from Kaggle / Colab secrets and is not committed here.
+კონკურსის მონაცემები (`train.csv`, `test.csv`, `features.csv`, `stores.csv`, `sampleSubmission.csv`) იტვირთება Kaggle / Colab secrets-იდან და რეპოზიტორში არ არის ჩადებული.
 
 ---
 
-## MLflow / WandB links
+## MLflow / WandB ბმულები
 
-| Service | Link / project |
+| სერვისი | ბმული / პროექტი |
 |---|---|
 | **GitHub** | https://github.com/lshek22/walmart-recruiting-store-sales-forecasting |
 | **DagsHub + MLflow** | https://dagshub.com/lshek22/walmart-recruiting-store-sales-forecasting |
-| **WandB project** | `ml-final-projekt-walmart-sales-forecasting` (used by TFT / PatchTST login; most notebooks log only via MLflow) |
+| **WandB პროექტი** | `ml-final-projekt-walmart-sales-forecasting` (TFT / PatchTST login; უმეტესი ნოუთბუქი მხოლოდ MLflow-ით ლოგავს) |
 
-Almost every experiment logs parameters, WMAE metrics, and artifacts through **MLflow on DagsHub** (`repo_owner=lshek22`). Typical experiment names:
+თითქმის ყველა ექსპერიმენტი პარამეტრებს, WMAE მეტრიკებს და არტეფაქტებს **MLflow-ით DagsHub-ზე** ლოგავს (`repo_owner=lshek22`). ტიპური ექსპერიმენტების სახელები:
 
-| Model | MLflow experiment(s) |
+| მოდელი | MLflow ექსპერიმენტ(ებ)ი |
 |---|---|
 | XGBoost | `XGBoost_v4_Cleaning`, `_Feature_Engineering`, `_Feature_Selection`, `_HPO`, `_Training` |
-| LightGBM | `LightGBM_v4_*` (same stage pattern) |
+| LightGBM | `LightGBM_v4_*` (იგივე ეტაპების შაბლონი) |
 | Random Forest | `RandomForest_Cleaning`, `_Feature_Selection`, `_Training` |
 | ARIMA | `ARIMA_Training_v2` |
 | SARIMA | `SARIMA_Training` |
@@ -85,258 +85,258 @@ Almost every experiment logs parameters, WMAE metrics, and artifacts through **M
 | TFT | `TFT_Training` |
 | PatchTST | `PatchTST_Training` / `patchtst_v1` |
 
-**Note on WandB:** DLinear and N-BEATS install `wandb` but do **not** log training curves there. TFT and PatchTST call `wandb.login` and set a project name; primary metrics still go to MLflow.
+**შენიშვნა WandB-ზე:** DLinear და N-BEATS აყენებენ `wandb`-ს, მაგრამ **ტრენინგის მრუდებს იქ არ ლოგავენ**. TFT და PatchTST იძახებენ `wandb.login`-ს და ადგენენ პროექტის სახელს; ძირითადი მეტრიკები მაინც MLflow-ში მიდის.
 
 ---
 
-## Train / Val / Test split
+## Train / Val / Test დაყოფა
 
-**Test set** is always the official Kaggle `test.csv` horizon (weekly Fridays after the end of `train.csv`). Models never train on Kaggle test labels.
+**ტესტ სეტი** ყოველთვის ოფიციალური Kaggle `test.csv` ჰორიზონტია (კვირის პარასკევები `train.csv`-ის დასრულების შემდეგ). მოდელები Kaggle-ის ტესტ ლეიბლებზე არ ტრენინგდება.
 
-Validation differs by family:
+ვალიდაცია ოჯახების მიხედვით განსხვავდება:
 
-### A. Holiday-aware 3-fold rolling origin
-Used by **DLinear, N-BEATS, Prophet, SARIMA, NeuralProphet**.
+### A. დღესასწაულზე ორიენტირებული 3-ფოლდიანი rolling origin
+იყენებენ **DLinear, N-BEATS, Prophet, SARIMA, NeuralProphet**.
 
-| Fold | Validation window |
+| ფოლდი | ვალიდაციის ფანჯარა |
 |---|---|
 | **holiday** | 2011-11-01 → 2012-01-31 |
 | **spring** | 2012-02-01 → 2012-04-30 |
 | **late** | 2012-08-01 → 2012-10-31 |
 
-Training uses all history **before** each fold start. Model selection minimizes **mean WMAE across the three folds**, so Christmas / Thanksgiving weeks are always represented in validation.
+ტრენინგი იყენებს მთელ ისტორიას **თითოეული ფოლდის დაწყებამდე**. მოდელის შერჩევა მინიმიზაციას უკეთებს **სამივე ფოლდის საშუალო WMAE**-ს, ამიტომ Christmas / Thanksgiving კვირები ვალიდაციაში ყოველთვის არის წარმოდგენილი.
 
-### B. Single walk-forward holdouts (tree / neuralforecast notebooks)
+### B. ერთჯერადი walk-forward holdout-ები (ხის / NeuralForecast ნოუთბუქები)
 
-| Model | Validation window |
+| მოდელი | ვალიდაციის ფანჯარა |
 |---|---|
 | **XGBoost v4** | 2012-01-27 → 2012-10-26 |
 | **LightGBM v4** | 2011-10-01 → 2012-01-15 |
-| **TFT v3 / PatchTST v1** | dates ≥ 2011-10-01 |
-| **ARIMA v2** | last **8 weeks** of train (≈ 2012-09-07 → 2012-10-26) |
+| **TFT v3 / PatchTST v1** | თარიღები ≥ 2011-10-01 |
+| **ARIMA v2** | ტრენის ბოლო **8 კვირა** (≈ 2012-09-07 → 2012-10-26) |
 
 ### C. TimeSeriesSplit (Random Forest)
 
-**Random Forest** uses `TimeSeriesSplit(n_splits=4)` over unique weeks (not the Holiday/Spring/Late calendar folds).
+**Random Forest** იყენებს `TimeSeriesSplit(n_splits=4)`-ს უნიკალურ კვირებზე (არა Holiday/Spring/Late კალენდარულ ფოლდებს).
 
 ---
 
-## Feature engineering
+## Feature Engineering
 
-Feature strategy depends on the model class:
+ფიჩერების სტრატეგია მოდელის კლასზეა დამოკიდებული:
 
-### Shared preprocessing (most notebooks)
-- Clip `Weekly_Sales` at **≥ 0**
-- Fill MarkDown NaNs with **0**
-- Merge `stores.csv` + `features.csv` on Store / Date
-- Holiday weight **5** for WMAE and (where supported) sample weights
+### საერთო პრეპროცესინგი (უმეტეს ნოუთბუქში)
+- `Weekly_Sales`-ის კლიპი **≥ 0**
+- MarkDown NaN-ების შევსება **0**-ით
+- `stores.csv` + `features.csv` გაერთიანება Store / Date-ზე
+- დღესასწაულის წონა **5** WMAE-სთვის და (სადაც მხარდაჭერილია) sample weight-ებისთვის
 
-### Rich tabular FE (XGBoost, LightGBM, Random Forest)
-- Store metadata: `Type`, `Size`
-- Weather / economy: Temperature, Fuel_Price, CPI, Unemployment
-- Calendar: year / month / week-of-year, sin/cos encodings, weeks elapsed
-- Holiday flags and distances (signed distance; days-to / days-post per holiday)
-- Lags (`1, 2, 4, 8, 52`, …), rolling means/std, YoY ratios
-- Expanding target encodings with `shift(1)` (leakage-safe)
-- MarkDown aggregates and interactions (holiday × MarkDown, Unemployment × MarkDown)
-- Tree importance pruning before final fit
+### მდიდარი ცხრილური FE (XGBoost, LightGBM, Random Forest)
+- მაღაზიის მეტამონაცემები: `Type`, `Size`
+- ამინდი / ეკონომიკა: Temperature, Fuel_Price, CPI, Unemployment
+- კალენდარი: წელი / თვე / კვირა წელში, sin/cos კოდირება, გასული კვირები
+- დღესასწაულის ფლაგები და მანძილები (ნიშნიანი მანძილი; days-to / days-post თითოეულ დღესასწაულამდე)
+- ლაგები (`1, 2, 4, 8, 52`, …), rolling mean/std, YoY თანაფარდობები
+- გაფართოებადი target encoding-ები `shift(1)`-ით (leakage-safe)
+- MarkDown აგრეგატები და ინტერაქციები (დღესასწაული × MarkDown, Unemployment × MarkDown)
+- ხის importance pruning საბოლოო ფიტამდე
 
-### Classical / additive time-series FE
-- **ARIMA:** optional exogenous `IsHoliday` only
-- **SARIMA / Prophet / NeuralProphet:** custom Walmart holiday table — `super_bowl`, `labor_day`, `thanksgiving`, `christmas`, **`pre_christmas`**
-- Gap handling: per-series weekly grids (interior fill / interpolate); Prophet floors `y ≥ 1` for multiplicative seasonality
+### კლასიკური / ადიტიური დროითი მწკრივების FE
+- **ARIMA:** მხოლოდ ოპციონალური ეგზოგენური `IsHoliday`
+- **SARIMA / Prophet / NeuralProphet:** Walmart-ის დღესასწაულების ცხრილი — `super_bowl`, `labor_day`, `thanksgiving`, `christmas`, **`pre_christmas`**
+- ხარვეზების დამუშავება: მწკრივის შიგნით კვირის ბადე (interior fill / ინტერპოლაცია); Prophet `y ≥ 1`-ზე აწევს მულტიპლიკატიური სეზონურობისთვის
 
-### Deep forecasting FE
-- **DLinear / N-BEATS / PatchTST:** primarily **univariate** Store×Dept sales after `log1p` + per-series Min–Max (DLinear/N-BEATS) or NeuralForecast scaling
-- **TFT:** full covariate wiring — **future** (calendar, holidays, weather, MarkDowns), **historical** (`PrevYearSales`), **static** (Store, Dept, Type, Size)
-
----
-
-## Models
-
-### XGBoost Training
-
-**Notebook:** `experiment-xgboost-v4.ipynb`
-
-Global `XGBRegressor` on the rich tabular feature set.
-
-- **Objective:** `reg:absoluteerror` with holiday sample weights `{5, 1}`
-- **HPO:** Optuna (~15 trials) over `learning_rate`, `max_depth`, `min_child_weight`, `subsample`, `colsample_bytree`
-- **Inference:** recursive multi-step forecast on the Kaggle test horizon; blend with `lag_52`; Christmas week mass-shift post-process
-- **Tracking:** stage-wise MLflow experiments under `XGBoost_v4_*`
-- **Reported val WMAE (notebook):** blended ≈ **1688** (`α = 0.75`)
+### ღრმა პროგნოზირების FE
+- **DLinear / N-BEATS / PatchTST:** ძირითადად **უნივარიატული** Store×Dept გაყიდვები `log1p` + სერიის Min–Max-ის შემდეგ (DLinear/N-BEATS) ან NeuralForecast სკალირებით
+- **TFT:** სრული კოვარიატების მიბმა — **მომავალი** (კალენდარი, დღესასწაულები, ამინდი, MarkDown-ები), **ისტორიული** (`PrevYearSales`), **სტატიკური** (Store, Dept, Type, Size)
 
 ---
 
-### LightGBM Training
+## მოდელები
 
-**Notebook:** `experiment_light_v4.ipynb`
+### XGBoost ტრენინგი
 
-Same FE / recursive-forecast recipe as XGBoost, with `LGBMRegressor`.
+**ნოუთბუქი:** `experiment-xgboost-v4.ipynb`
 
-- **Objective:** `regression_l1` + holiday sample weights
-- **HPO:** Optuna (~15 trials) over `learning_rate`, `num_leaves`, `min_child_samples`, `subsample`, `colsample_bytree`
-- **Post-process:** `lag_52` blend + Christmas shift (same family as XGBoost)
-- **Tracking:** `LightGBM_v4_*` on DagsHub
-- **Reported val WMAE (notebook):** blended ≈ **2387** (`α = 0.30`)
+გლობალური `XGBRegressor` მდიდარ ცხრილურ ფიჩერებზე.
 
----
-
-### Random Forest Training
-
-**Notebook:** `experiment-RandomForest.ipynb`
-
-`RandomForestRegressor` with leakage-safe v2 FE (IQR clip from train only, signed holiday distances, expanding encodings).
-
-- **Fit:** MSE + holiday `sample_weight`; select by CV WMAE
-- **Search:** small grid (`max_depth`, `min_samples_leaf`, `max_features`; `n_estimators=300`)
-- **Validation:** 4-fold `TimeSeriesSplit` on weeks
-- **Tracking:** `RandomForest_*` MLflow experiments
-- **Output:** `submission_randomforest.csv`
+- **Objective:** `reg:absoluteerror` დღესასწაულის sample weight-ებით `{5, 1}`
+- **HPO:** Optuna (~15 ტრაალი) — `learning_rate`, `max_depth`, `min_child_weight`, `subsample`, `colsample_bytree`
+- **ინფერენსი:** რეკურსიული მრავალსაფეხურიანი პროგნოზი Kaggle ტესტ ჰორიზონტზე; შერევა `lag_52`-თან; Christmas კვირის mass-shift პოსტპროცესი
+- **თრექინგი:** ეტაპობრივი MLflow ექსპერიმენტები `XGBoost_v4_*`
+- **ვალიდაციის WMAE (ნოუთბუქი):** blended ≈ **1688** (`α = 0.75`)
 
 ---
 
-### ARIMA Training
+### LightGBM ტრენინგი
 
-**Notebook:** `experiment-arima-v2.ipynb`
+**ნოუთბუქი:** `experiment_light_v4.ipynb`
 
-Local **per Store×Dept** ARIMA / ARIMAX models (`statsmodels`).
+იგივე FE / რეკურსიული პროგნოზის რეცეპტი, რაც XGBoost-ს, `LGBMRegressor`-ით.
 
-- **Diagnostics:** ADF, ACF/PACF, seasonal decomposition on train only
-- **Order screen:** manual grid `(0,1,0)…(2,1,2)` ± `IsHoliday` exog on a 50-series subset (≥80 weeks)
-- **Validation:** last 8 train weeks
-- **Fallbacks:** recent mean / global median for short or failed fits
-- **Tracking:** `ARIMA_Training_v2`
-- **Reported subset WMAE:** champion `ARIMA(2,1,2)` ≈ **2408** (ARIMAX+holiday was worse on that subset)
-
----
-
-### SARIMA Training
-
-**Notebook:** `experiment-SARIMA.ipynb`
-
-Seasonal ARIMA with period **52**, upgraded to the shared **3 holiday-aware folds**.
-
-- **Candidates:** `(0,1,1)×(0,1,1,52)`, `(1,1,1)×(0,1,1,52)`, `(1,1,1)×(0,1,0,52)`, plus SARIMAX with `IsHoliday` or Walmart event dummies
-- **Selection:** mean fold WMAE on a series subset (`MIN_TRAIN_WEEKS=80`)
-- **Submission:** per-series refit with checkpoint/resume; dept-median fallback; forecast cap at 5× historical max
-- **Tracking:** `SARIMA_Training`
-- **Internal champion (DagsHub):** `(0,1,1)×(0,1,1,52)`, mean fold val WMAE ≈ **2129**
+- **Objective:** `regression_l1` + დღესასწაულის sample weight-ები
+- **HPO:** Optuna (~15 ტრაალი) — `learning_rate`, `num_leaves`, `min_child_samples`, `subsample`, `colsample_bytree`
+- **პოსტპროცესი:** `lag_52` blend + Christmas shift (იგივე ოჯახი, რაც XGBoost)
+- **თრექინგი:** `LightGBM_v4_*` DagsHub-ზე
+- **ვალიდაციის WMAE (ნოუთბუქი):** blended ≈ **2387** (`α = 0.30`)
 
 ---
 
-### Prophet Training
+### Random Forest ტრენინგი
 
-**Notebook:** `experiment-Prophet.ipynb`
+**ნოუთბუქი:** `experiment-RandomForest.ipynb`
 
-Local Prophet models with a custom Walmart holiday table and Optuna priors.
+`RandomForestRegressor` leakage-safe v2 FE-ით (IQR კლიპი მხოლოდ ტრენიდან, ნიშნიანი დღესასწაულის მანძილები, გაფართოებადი encoding-ები).
 
-- **Preprocess:** per-series interior gap-fill (no global leading zeros); `y` floor = 1
-- **HPO:** Optuna (~20 trials) over changepoint / seasonality / holiday priors, `n_changepoints`, yearly Fourier order, additive vs multiplicative
-- **Validation:** Holiday / Spring / Late → mean WMAE (subset of series during search)
-- **Tracking:** `Prophet_Training` (train & val WMAE per fold)
-- **Kaggle (reported):** public ≈ **2734**, private ≈ **2829** (Prophet v4 submission)
-
----
-
-### NeuralProphet Training
-
-**Notebook:** `experiment-NeuralProphet.ipynb`
-
-**Global** NeuralProphet (one model, many IDs) with AR-Net.
-
-- **Design:** `n_lags=52`, yearly seasonality, optional Walmart event future regressors; `trend_global_local='global'`
-- **Screen:** small config set (`base_ar`, `events`, `events_deep_ar`) on the holiday fold, then re-score all three folds
-- **Stability / speed:** drop constant / short series; truncate history before predict; chunked prediction; series cap for Colab runs
-- **Tracking:** `NeuralProphet_Training` (MLflow only; WandB removed)
+- **ფიტი:** MSE + დღესასწაულის `sample_weight`; შერჩევა CV WMAE-ით
+- **ძებნა:** მცირე გრიდი (`max_depth`, `min_samples_leaf`, `max_features`; `n_estimators=300`)
+- **ვალიდაცია:** 4-ფოლდიანი `TimeSeriesSplit` კვირებზე
+- **თრექინგი:** `RandomForest_*` MLflow ექსპერიმენტები
+- **გამოტანა:** `submission_randomforest.csv`
 
 ---
 
-### DLinear Training
+### ARIMA ტრენინგი
 
-**Notebook:** `experiment-DLinear.ipynb`
+**ნოუთბუქი:** `experiment-arima-v2.ipynb`
 
-Univariate DLinear (trend + seasonal linear heads) trained globally on windowed Store×Dept series.
+ლოკალური **თითო Store×Dept**-ზე ARIMA / ARIMAX მოდელები (`statsmodels`).
 
-- **Preprocess:** weekly grid gap-fill(0) → `log1p` → per-series Min–Max (fit on train only)
-- **HPO:** Optuna (~30 trials): `seq_len`, `pred_len`, kernel size, `const_init`, batch size, learning rate
-- **Train:** L1 loss, Adam, 30 epochs, grad clip 1.0
-- **Validation:** mean WMAE over Holiday / Spring / Late
-- **Tracking:** `DLinear_Training` (MLflow; WandB not used for gradients)
-- **Kaggle (reported):** public ≈ **2977**, private ≈ **3163** (DLinear v2 submission)
-
----
-
-### N-BEATS Training
-
-**Notebook:** `experiment-NBEATS.ipynb`
-
-Univariate N-BEATS (MLP backcast/forecast stacks) with the same preprocess and folds as DLinear.
-
-- **HPO:** Optuna (~25 trials): stacks, blocks, layers, width, dropout, lookback, horizon, batch, lr
-- **Train:** L1, AdamW, 25 epochs; **max 10 windows / series** during search
-- **Tracking:** `NBEATS_Training`
-- **Kaggle (reported):** public ≈ **2779**, private ≈ **2879** (N-BEATS v2 submission)
+- **დიაგნოსტიკა:** ADF, ACF/PACF, სეზონური დეკომპოზიცია მხოლოდ ტრენზე
+- **წესრიგის სკრინი:** მანუალური გრიდი `(0,1,0)…(2,1,2)` ± `IsHoliday` ეგზოგი 50 მწკრივის ქვესიმრავლეზე (≥80 კვირა)
+- **ვალიდაცია:** ტრენის ბოლო 8 კვირა
+- **Fallback-ები:** ბოლო საშუალო / გლობალური მედიანა მოკლე ან ჩავარდნილი ფიტებისთვის
+- **თრექინგი:** `ARIMA_Training_v2`
+- **ქვესიმრავლის WMAE:** ჩემპიონი `ARIMA(2,1,2)` ≈ **2408** (ARIMAX+holiday იმავე ქვესიმრავლეზე უარესი იყო)
 
 ---
 
-### TFT Training
+### SARIMA ტრენინგი
 
-**Notebook:** `experiment_tft_v3.ipynb`
+**ნოუთბუქი:** `experiment-SARIMA.ipynb`
 
-Temporal Fusion Transformer via **NeuralForecast**, with proper future / historical / static covariates.
+სეზონური ARIMA პერიოდით **52**, გაზიარებულ **3 დღესასწაულურ ფოლდზე** გადაყვანილი.
 
-- **Split:** train `< 2011-10-01`, validate on later weeks; final fit on full train; `h=60` for test
-- **HPO:** sequential 1-D sweeps (not Optuna): `input_size`, `hidden_size`, `n_head`, `batch_size`, `lr`, `dropout` — with and without covariates
-- **Loss:** MAE in training; WMAE for selection
-- **Tracking:** `TFT_Training` + WandB login (`ml-final-projekt-walmart-sales-forecasting`)
-- **Note:** covariates help in some configs but can also hurt; target-only baselines remain important references
-
----
-
-### PatchTST Training
-
-**Notebook:** `experiment_patchtst_v1.ipynb`
-
-Patch Time Series Transformer (NeuralForecast), treated as a **univariate** global multi-series model.
-
-- **Same val date** as TFT (`≥ 2011-10-01`)
-- **HPO:** 1-D sweeps over `input_size`, `patch_len`, `batch_size`, `lr`, `dropout`; longer `max_steps` runs for final candidates
-- **Tracking:** `PatchTST_Training` / `patchtst_v1` + WandB login
-- **Reported val WMAE (notebook):** best printed runs down to ≈ **2234**
+- **კანდიდატები:** `(0,1,1)×(0,1,1,52)`, `(1,1,1)×(0,1,1,52)`, `(1,1,1)×(0,1,0,52)`, პლუს SARIMAX `IsHoliday`-ით ან Walmart ივენთების დამიებით
+- **შერჩევა:** ფოლდების საშუალო WMAE მწკრივების ქვესიმრავლეზე (`MIN_TRAIN_WEEKS=80`)
+- **საბმიშენი:** თითო მწკრივის რეფიტი checkpoint/resume-ით; დეპარტამენტის მედიანის fallback; პროგნოზის კაპი ისტორიული მაქსიმუმის 5×-ზე
+- **თრექინგი:** `SARIMA_Training`
+- **შიდა ჩემპიონი (DagsHub):** `(0,1,1)×(0,1,1,52)`, საშუალო ფოლდის val WMAE ≈ **2129**
 
 ---
 
-## Metric summary
+### Prophet ტრენინგი
 
-| Model | Typical selection metric | Notes |
+**ნოუთბუქი:** `experiment-Prophet.ipynb`
+
+ლოკალური Prophet მოდელები Walmart-ის დღესასწაულების ცხრილით და Optuna პრიორებით.
+
+- **პრეპროცესი:** მწკრივის შიგნით gap-fill (გლობალური წამყვანი ნულების გარეშე); `y` floor = 1
+- **HPO:** Optuna (~20 ტრაალი) — changepoint / seasonality / holiday პრიორები, `n_changepoints`, წლიური Fourier რიგი, ადიტიური vs მულტიპლიკატიური
+- **ვალიდაცია:** Holiday / Spring / Late → საშუალო WMAE (ძებნისას მწკრივების ქვესიმრავლე)
+- **თრექინგი:** `Prophet_Training` (train და val WMAE თითო ფოლდზე)
+- **Kaggle (რეპორტირებული):** public ≈ **2734**, private ≈ **2829** (Prophet v4 საბმიშენი)
+
+---
+
+### NeuralProphet ტრენინგი
+
+**ნოუთბუქი:** `experiment-NeuralProphet.ipynb`
+
+**გლობალური** NeuralProphet (ერთი მოდელი, ბევრი ID) AR-Net-ით.
+
+- **დიზაინი:** `n_lags=52`, წლიური სეზონურობა, ოპციონალური Walmart ივენთების future regressor-ები; `trend_global_local='global'`
+- **სკრინი:** მცირე კონფიგების სიმრავლე (`base_ar`, `events`, `events_deep_ar`) holiday ფოლდზე, შემდეგ სამივე ფოლდის ხელახალი შეფასება
+- **სტაბილურობა / სიჩქარე:** მუდმივი / მოკლე მწკრივების მოცილება; ისტორიის შემოკლება predict-მდე; chunked პროგნოზი; მწკრივების ლიმიტი Colab გაშვებებისთვის
+- **თრექინგი:** `NeuralProphet_Training` (მხოლოდ MLflow; WandB ამოღებულია)
+
+---
+
+### DLinear ტრენინგი
+
+**ნოუთბუქი:** `experiment-DLinear.ipynb`
+
+უნივარიატული DLinear (ტრენდი + სეზონური ხაზოვანი თავები), გლობალურად დატრენინგებული Store×Dept ფანჯრებზე.
+
+- **პრეპროცესი:** კვირის ბადის gap-fill(0) → `log1p` → სერიის Min–Max (ფიტი მხოლოდ ტრენზე)
+- **HPO:** Optuna (~30 ტრაალი): `seq_len`, `pred_len`, kernel size, `const_init`, batch size, learning rate
+- **ტრენინგი:** L1 loss, Adam, 30 ეპოქა, grad clip 1.0
+- **ვალიდაცია:** საშუალო WMAE Holiday / Spring / Late ფოლდებზე
+- **თრექინგი:** `DLinear_Training` (MLflow; WandB გრადიენტებისთვის არ გამოიყენება)
+- **Kaggle (რეპორტირებული):** public ≈ **2977**, private ≈ **3163** (DLinear v2 საბმიშენი)
+
+---
+
+### N-BEATS ტრენინგი
+
+**ნოუთბუქი:** `experiment-NBEATS.ipynb`
+
+უნივარიატული N-BEATS (MLP backcast/forecast სტეკები) იმავე პრეპროცესითა და ფოლდებით, რაც DLinear-ს.
+
+- **HPO:** Optuna (~25 ტრაალი): stacks, blocks, layers, width, dropout, lookback, horizon, batch, lr
+- **ტრენინგი:** L1, AdamW, 25 ეპოქა; ძებნისას **მაქს. 10 ფანჯარა / მწკრივი**
+- **თრექინგი:** `NBEATS_Training`
+- **Kaggle (რეპორტირებული):** public ≈ **2779**, private ≈ **2879** (N-BEATS v2 საბმიშენი)
+
+---
+
+### TFT ტრენინგი
+
+**ნოუთბუქი:** `experiment_tft_v3.ipynb`
+
+Temporal Fusion Transformer **NeuralForecast**-ით, სწორი მომავალი / ისტორიული / სტატიკური კოვარიატებით.
+
+- **დაყოფა:** ტრენი `< 2011-10-01`, ვალიდაცია მოგვიანებით კვირებზე; საბოლოო ფიტი მთელ ტრენზე; ტესტისთვის `h=60`
+- **HPO:** თანმიმდევრული 1-D სვიპები (არა Optuna): `input_size`, `hidden_size`, `n_head`, `batch_size`, `lr`, `dropout` — კოვარიატებით და მათ გარეშე
+- **Loss:** ტრენინგში MAE; შერჩევისთვის WMAE
+- **თრექინგი:** `TFT_Training` + WandB login (`ml-final-projekt-walmart-sales-forecasting`)
+- **შენიშვნა:** კოვარიატები ზოგ კონფიგში ეხმარება, ზოგჯერ კი აუარესებს; მხოლოდ ტარგეტის ბეიზლაინები მნიშვნელოვან რეფერენსად რჩება
+
+---
+
+### PatchTST ტრენინგი
+
+**ნოუთბუქი:** `experiment_patchtst_v1.ipynb`
+
+Patch Time Series Transformer (NeuralForecast), როგორც **უნივარიატული** გლობალური მრავალმწკრივიანი მოდელი.
+
+- **იგივე val თარიღი**, რაც TFT-ს (`≥ 2011-10-01`)
+- **HPO:** 1-D სვიპები — `input_size`, `patch_len`, `batch_size`, `lr`, `dropout`; საბოლოო კანდიდატებისთვის უფრო გრძელი `max_steps` გაშვებები
+- **თრექინგი:** `PatchTST_Training` / `patchtst_v1` + WandB login
+- **ვალიდაციის WMAE (ნოუთბუქი):** საუკეთესო დაბეჭდილი გაშვებები ≈ **2234**-მდე
+
+---
+
+## მეტრიკების შეჯამება
+
+| მოდელი | ტიპური შერჩევის მეტრიკა | შენიშვნა |
 |---|---|---|
-| XGBoost v4 | Val WMAE ≈ 1688 (blended) | Strongest tabular baseline in-notebook |
-| LightGBM v4 | Val WMAE ≈ 2387 (blended) | Same recipe, different val window |
-| PatchTST | Val WMAE ≈ 2234 | Univariate transformer |
-| SARIMA | Mean fold WMAE ≈ 2129 | Seasonal local models |
-| N-BEATS | Kaggle public ≈ 2779 | Shared 3-fold recipe |
-| Prophet | Kaggle public ≈ 2734 | Holiday table + Optuna |
-| DLinear | Kaggle public ≈ 2977 | Shared 3-fold recipe |
-| TFT | Val sweeps ~3140–4500 | Sensitive to covariate setup |
-| ARIMA | Subset WMAE ≈ 2408 | Non-seasonal local baseline |
-| Random Forest / NeuralProphet | Runtime CV | See DagsHub runs |
+| XGBoost v4 | Val WMAE ≈ 1688 (blended) | ყველაზე ძლიერი ცხრილური ბეიზლაინი ნოუთბუქში |
+| LightGBM v4 | Val WMAE ≈ 2387 (blended) | იგივე რეცეპტი, განსხვავებული val ფანჯარა |
+| PatchTST | Val WMAE ≈ 2234 | უნივარიატული ტრანსფორმერი |
+| SARIMA | ფოლდების საშუალო WMAE ≈ 2129 | სეზონური ლოკალური მოდელები |
+| N-BEATS | Kaggle public ≈ 2779 | გაზიარებული 3-ფოლდიანი რეცეპტი |
+| Prophet | Kaggle public ≈ 2734 | დღესასწაულების ცხრილი + Optuna |
+| DLinear | Kaggle public ≈ 2977 | გაზიარებული 3-ფოლდიანი რეცეპტი |
+| TFT | Val სვიპები ~3140–4500 | მგრძნობიარეა კოვარიატების კონფიგის მიმართ |
+| ARIMA | ქვესიმრავლის WMAE ≈ 2408 | არასეზონური ლოკალური ბეიზლაინი |
+| Random Forest / NeuralProphet | Runtime CV | იხილეთ DagsHub გაშვებები |
 
-Exact leaderboard numbers depend on the submission file version; always prefer the latest DagsHub / Kaggle entry for a given notebook.
-
----
-
-## How to run
-
-1. Attach Kaggle competition data (or set `KAGGLE_API_TOKEN` on Colab).
-2. Optional secrets: `DAGSHUB_USER_TOKEN`, `WANDB_API_KEY` (TFT / PatchTST).
-3. Open the target `experiment-*.ipynb`.
-4. Prefer **GPU** for DLinear, N-BEATS, TFT, PatchTST, NeuralProphet; **CPU** is fine for Prophet, SARIMA, ARIMA, trees.
-5. Use each notebook’s `FAST_RUN` (where present) for a smoke test before a full Optuna / sweep run.
-6. Upload the generated `submission_*.csv` to Kaggle.
+ზუსტი ლიდერბორდის რიცხვები საბმიშენის ვერსიაზეა დამოკიდებული; ყოველთვის უპირატესობა მიეცით DagsHub / Kaggle-ის უახლეს ჩანაწერს მოცემული ნოუთბუქისთვის.
 
 ---
 
-## Authors
+## როგორ გავუშვათ
 
-Collaborative ML course project — notebooks cover complementary model families (gradient boosting, classical time series, Prophet-style decompositions, and deep forecasters), all tracked toward the same WMAE objective.
+1. მიაბით Kaggle კონკურსის მონაცემები (ან დააყენეთ `KAGGLE_API_TOKEN` Colab-ზე).
+2. ოპციონალური საიდუმლოები: `DAGSHUB_USER_TOKEN`, `WANDB_API_KEY` (TFT / PatchTST).
+3. გახსენით სასურველი `experiment-*.ipynb`.
+4. **GPU** უპირატესია DLinear, N-BEATS, TFT, PatchTST, NeuralProphet-ისთვის; **CPU** საკმარისია Prophet, SARIMA, ARIMA და ხის მოდელებისთვის.
+5. სადაც არის, გამოიყენეთ `FAST_RUN` სმოუკ-ტესტისთვის სრული Optuna / სვიპის გაშვებამდე.
+6. ატვირთეთ მიღებული `submission_*.csv` Kaggle-ზე.
+
+---
+
+## ავტორები
+
+კოლაბორაციული ML კურსის პროექტი — ნოუთბუქები მოიცავს კომპლემენტარულ მოდელების ოჯახებს (გრადიენტული ბუსტინგი, კლასიკური დროითი მწკრივები, Prophet-ტიპის დეკომპოზიციები და ღრმა პროგნოზორები), ყველა ერთი და იმავე WMAE მიზნისკენ.
