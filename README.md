@@ -1,7 +1,7 @@
 # Walmart Recruiting — Store Sales Forecasting
 
 [Walmart Recruiting - Store Sales Forecasting](https://www.kaggle.com/competitions/walmart-recruiting-store-sales-forecasting)
-Kaggle კონკურსი.
+Kaggle-ს კონკურსი.
 
 ## პრობლემის აღწერა
 
@@ -26,6 +26,54 @@ w_i = 5 თუ კვირა დღესასწაულურია, ს�
 ### მიზანი
 
 მოდელების დატრენინგება, რომლებიც საუკეთესოდ შეძლებს მომავლის პროგნოზს, იქნება ეს ჩვეულებრივი დღე თუ რაიმე სახის დღესასწაული.
+
+---
+
+## რეპოზიტორის სტრუქტურა
+
+```
+walmart-recruiting-store-sales-forecasting/
+├── README.md
+├── EDA.ipynb                    # EDA + გრაფიკები (eda_figures/)
+├── eda_figures/                 # README-ს სურათები
+├── model-inference-final.ipynb  # ფინალური ინფერენსი (XGBoost v4)
+├── preprocessing.ipynb
+├── features.ipynb
+│
+├── # ხის / კლასიკური მოდელები
+├── experiment-xgboost-v4.ipynb
+├── experiment_light_v4.ipynb
+├── experiment-RandomForest.ipynb
+├── experiment-arima-v2.ipynb
+├── experiment-SARIMA.ipynb
+├── experiment-Prophet.ipynb
+├── experiment-NeuralProphet.ipynb
+│
+├── # ნეირონული პროგნოზირების მოდელები
+├── experiment-DLinear.ipynb
+├── experiment-NBEATS.ipynb
+├── experiment_tft_v3.ipynb
+└── experiment_patchtst_v1.ipynb
+```
+
+---
+
+
+ძველი, სამუშაო ნოუთბუქები (`experiment-xgboost.ipynb`, `experiment-lightgbm-v2/v3`, `experiment-arima.ipynb`, `experiment-tft.ipynb`, …) შენახულია ისტორიისთვის; ქვემოთ აღწერილია **მიმდინარე ვერსიები**.
+
+კონკურსის მონაცემებს სიდიდის გამო (`train.csv`, `test.csv`, `features.csv`, `stores.csv`, `sampleSubmission.csv`) ვტვირთავთ Kaggle / Colab secrets-იდან და რეპოზიტორიაში არ გვაქვს შენახული.
+
+---
+
+## MLflow / WandB ბმულები
+
+| სერვისი | ბმული / პროექტი |
+|---|---|
+| **GitHub** | https://github.com/lshek22/walmart-recruiting-store-sales-forecasting |
+| **DagsHub + MLflow** | https://dagshub.com/lshek22/walmart-recruiting-store-sales-forecasting |
+| **WandB პროექტი** | `ml-final-projekt-walmart-sales-forecasting` (TFT / PatchTST login; უმეტესი ნოუთბუქი მხოლოდ MLflow-ით ლოგავს) |
+
+ყველა ექსპერიმენტის პარამეტრებს, WMAE მეტრიკებს და არტეფაქტებს **MLflow-ით DagsHub-ზე** ვლოგავთ  (`repo_owner=lshek22`).
 
 ---
 
@@ -91,66 +139,6 @@ w_i = 5 თუ კვირა დღესასწაულურია, ს�
 
 ![Store Size Type](eda_figures/10_store_size_type_vs_sales.png)
 
----
-
-## რეპოზიტორის სტრუქტურა
-
-```
-walmart-recruiting-store-sales-forecasting/
-├── README.md
-├── EDA.ipynb                    # EDA + გრაფიკები (eda_figures/)
-├── eda_figures/                 # README-ს სურათები
-├── model-inference-final.ipynb  # ფინალური ინფერენსი (XGBoost v4)
-├── preprocessing.ipynb
-├── features.ipynb
-│
-├── # ხის / კლასიკური მოდელები
-├── experiment-xgboost-v4.ipynb
-├── experiment_light_v4.ipynb
-├── experiment-RandomForest.ipynb
-├── experiment-arima-v2.ipynb
-├── experiment-SARIMA.ipynb
-├── experiment-Prophet.ipynb
-├── experiment-NeuralProphet.ipynb
-│
-├── # ნეირონული პროგნოზირების მოდელები
-├── experiment-DLinear.ipynb
-├── experiment-NBEATS.ipynb
-├── experiment_tft_v3.ipynb
-└── experiment_patchtst_v1.ipynb
-```
-
-ძველი, სამუშაო ნოუთბუქები (`experiment-xgboost.ipynb`, `experiment-lightgbm-v2/v3`, `experiment-arima.ipynb`, `experiment-tft.ipynb`, …) შენახულია ისტორიისთვის; ქვემოთ აღწერილია **მიმდინარე ვერსიები**.
-
-კონკურსის მონაცემებს სიდიდის გამო (`train.csv`, `test.csv`, `features.csv`, `stores.csv`, `sampleSubmission.csv`) ვტვირთავთ Kaggle / Colab secrets-იდან და რეპოზიტორიაში არ გვაქვს შენახული.
-
----
-
-## MLflow / WandB ბმულები
-
-| სერვისი | ბმული / პროექტი |
-|---|---|
-| **GitHub** | https://github.com/lshek22/walmart-recruiting-store-sales-forecasting |
-| **DagsHub + MLflow** | https://dagshub.com/lshek22/walmart-recruiting-store-sales-forecasting |
-| **WandB პროექტი** | `ml-final-projekt-walmart-sales-forecasting` (TFT / PatchTST login; უმეტესი ნოუთბუქი მხოლოდ MLflow-ით ლოგავს) |
-
-ყველა ექსპერიმენტის პარამეტრებს, WMAE მეტრიკებს და არტეფაქტებს **MLflow-ით DagsHub-ზე** ვლოგავთ  (`repo_owner=lshek22`).
-
-| მოდელი | MLflow ექსპერიმენტ(ებ)ი |
-|---|---|
-| XGBoost | `XGBoost_v4_Cleaning`, `_Feature_Engineering`, `_Feature_Selection`, `_HPO`, `_Training` |
-| LightGBM | `LightGBM_v4_*` (იგივე ეტაპების შაბლონი) |
-| Random Forest | `RandomForest_Cleaning`, `_Feature_Selection`, `_Training` |
-| ARIMA | `ARIMA_Training_v2` |
-| SARIMA | `SARIMA_Training` |
-| Prophet | `Prophet_Training` |
-| NeuralProphet | `NeuralProphet_Training` |
-| DLinear | `DLinear_Training` |
-| N-BEATS | `NBEATS_Training` |
-| TFT | `TFT_Training` |
-| PatchTST | `PatchTST_Training` / `patchtst_v1` |
-
-**შენიშვნა WandB-ზე:** DLinear და N-BEATS აყენებენ `wandb`-ს, მაგრამ **ტრენინგის მრუდებს იქ არ ლოგავენ**. TFT და PatchTST იძახებენ `wandb.login`-ს და ადგენენ პროექტის სახელს; ძირითადი მეტრიკები მაინც MLflow-ში მიდის.
 
 ---
 
